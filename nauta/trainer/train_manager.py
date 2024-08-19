@@ -1,6 +1,6 @@
 import math
 from tqdm import tqdm
-
+import wandb
 from nauta.tools.utils import plot_confusion_matrix
 
 
@@ -63,6 +63,7 @@ class TrainManager:
             self.optimizer.step()
 
         train_loss = train_loss/len(self.train_dataloader)
+        wandb.log({"epochs": epoch, f"train_loss": train_loss})
 
         self.writer.add_scalar('Loss/train_epoch', train_loss, step)
         print(f"Loss: {train_loss:.4f}")
@@ -111,6 +112,7 @@ class TrainManager:
             else:
                 display_values.append(f"{metric}: {value:.4f}")
                 self.writer.add_scalar(f'Metrics/{metric}', value, epoch)
+                wandb.log({"epochs": epoch, f"val_{metric}": value})
             self.metrics[metric].reset()
 
         print("  ".join(display_values))

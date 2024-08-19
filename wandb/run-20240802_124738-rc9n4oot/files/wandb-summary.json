@@ -1,0 +1,1 @@
+{"val_F1": 0.7496700286865234, "_timestamp": 1722593313.9574847, "val_Recall": 0.8600785732269287, "val_Accuracy": 0.8600785732269287, "val_Precision": 0.7408933639526367, "val_AccuracyMicro": 0.8438829779624939, "_step": 349, "epochs": 49, "_runtime": 1717.7800176143646, "train_loss": 0.06683327429395611, "val_AccuracyWeighted": 0.8438829779624939}

@@ -4,6 +4,7 @@ import os
 import random
 import torch
 import yaml
+import wandb
 
 from torchmetrics import Accuracy, Precision, Recall, F1, ConfusionMatrix
 from torchsummary import summary
@@ -66,6 +67,8 @@ def evaluate(model, dataloader, metrics, eval_dir, device='cpu'):
             cm_fig.savefig(os.path.join(eval_dir, "confusion_not_norm.svg"))
         else:
             print(f"Test {metric}: {value}")
+            m = f"test_{metric}"
+            wandb.log({m:value})
             data_info.append(f"{metric.lower()},{value}")
         metrics[metric].reset()
 
@@ -97,6 +100,14 @@ if __name__ == "__main__":
     print(f"\n\nStarting inference\n")
     print(f"Saving at {eval_dir}...")
 
+    # os.environ["WANDB_API_KEY"] = "22aad016fc1dde6942287b5bdd92d1f23559cc20"
+    # wandb.init(
+    #     # Set the project where this run will be logged
+    #     project="VesselDetection", 
+    #     # We pass a run name (otherwise it’ll be randomly assigned, like sunshine-lollypop-10)
+    #     name=f"Momin_vtuad_model_val_shuffle_true_ResNet18_Aug_1"
+    # )
+    
     # Initialize the dataset
     dataloader = get_split_dataloader(args_list, split="test")
 

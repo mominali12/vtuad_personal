@@ -16,6 +16,7 @@ from nauta.model import get_model
 from nauta.trainer import CheckpointManager, Checkpoint, TrainManager
 from nauta.tools import create_dir
 
+import wandb
 
 def create_parser():
     """Create the parser object.
@@ -49,6 +50,14 @@ def main():
 
     print("Start training\n\n")
 
+    os.environ["WANDB_API_KEY"] = "22aad016fc1dde6942287b5bdd92d1f23559cc20"
+    wandb.init(
+        # Set the project where this run will be logged
+        project="VesselDetection", 
+        # We pass a run name (otherwise it’ll be randomly assigned, like sunshine-lollypop-10)
+        name=f"Momin_vtuad_model_val_shuffle_true_ResNet18_Aug_19"
+    )
+
     if torch.cuda.is_available():
         device = "cuda"
     else:
@@ -73,6 +82,8 @@ def main():
     config_file_name = os.path.basename(args.config_file)
     config_file_path = os.path.join(args_list["paths"]["output_dir"], config_file_name)
     shutil.copyfile(args.config_file, config_file_path)
+
+    wandb.save(config_file_path)
 
     # Get the training, validation and test dataloaders.
     train_dataloader, validation_dataloader = get_dataset(args_list)
@@ -156,6 +167,7 @@ def main():
     checkpoint_manager.load_best_checkpoint()
     torch.save(model.state_dict(), os.path.join(final_model_dir, "best.pth"))
 
+    wandb.finish()
 
 if __name__ == "__main__":
     main()
